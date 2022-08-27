@@ -1,7 +1,6 @@
 #include<iostream>
 #include<string>
 #include<cstring>
-#include<list>
 
 using namespace std; 
 
@@ -43,6 +42,7 @@ public:
 	int delete_Item(int id, string name) {
 		if (head == NULL) {
 			cout << "Link list is empty there is nothing to delete in it.";
+			return 0;
 
 		}
 		else {
@@ -65,6 +65,7 @@ public:
 	int update_item(int id, string name) {
 		if (head == NULL) {
 			cout << "Link list is empty there is nothing to delete in it.";
+			return 0;
 
 		}
 		else {
@@ -113,7 +114,74 @@ public:
 			default:
 				break;
 			}
+			return 1;
 
+		}
+	}
+
+	int list_size() {
+		int size = 0;
+		if (head == NULL) {
+			return 0;
+		}
+		else {
+			node* temp = head;
+			while (temp->next != NULL) {
+				size++;
+				temp = temp->next;
+			}
+			size++;
+			return size;
+		}
+	}
+
+	void display_total_items() {
+		if (head == NULL) {
+			cout << "Link List is empty. There is nothing to show you here." << endl;
+		}
+		else {
+			node* temp = head;
+			while (temp->next != NULL) {
+				cout << "ID : " << temp->data.id << endl;
+				cout << "Product Name : " << temp->data.name << endl;
+				cout << "Price of Product" << temp->data.price << endl;
+				cout << "Company Name : " << temp->data.company_name << endl;
+				cout << "Quantity of Product : " << temp->data.quantity << endl;
+				cout << "-----------------------------------------------" << endl;
+			}
+			cout << "ID : " << temp->data.id << endl;
+			cout << "Product Name : " << temp->data.name << endl;
+			cout << "Price of Product" << temp->data.price << endl;
+			cout << "Company Name : " << temp->data.company_name << endl;
+			cout << "Quantity of Product : " << temp->data.quantity << endl;
+			cout << "-----------------------------------------------" << endl;
+		}
+	}
+
+	Product select_Product(string name, string company_name) {
+		if (head == NULL) {
+			cout << "Stock List is empty. Nothing to select from it." << endl;
+			return;
+		}
+		else {
+			node* temp = head;
+			bool found_item = false;
+			while (temp->next != NULL) {
+				if (temp->data.name == name && temp->data.company_name == company_name) {
+					Product p;
+					p.company_name = temp->data.company_name;
+					p.id = temp->data.id;
+					p.name = temp->data.name;
+					p.price = temp->data.price;
+					p.quantity = temp->data.quantity;
+					found_item = true;
+					return p;
+				}
+			}
+			if (found_item == false) {
+				cout << "Your product is not in Inventory List." << endl;
+				return;
+			}
 		}
 	}
 
@@ -135,22 +203,29 @@ public:
 		this->id = id;
 		this->name = name;
 	}
+	void display() {
+		cout << "ID is : " << this->id << endl;
+		cout << "Name is : " << this->name << endl;
+	}
 };
 
 class Customer : public Identity {
 public:
-	long int phone_number;
+	string phone_number;
 	string address;
 	Customer() {
-		phone_number = 0;
+		phone_number = "";
 		address = "";
 	}
-	Customer(int id, string name, int phone_number, string address):Identity(id, name) {
+	Customer(int id, string name, string phone_number, string address):Identity(id, name) {
 		this->phone_number = phone_number;
 		this->address = address;
 	}
 	void display() {
-
+		cout << "ID of this Customer is : " << this->id << endl;
+		cout << "Name of this Customer is : " << this->name << endl;
+		cout << "Address of this Customer is : " << this->address << endl;
+		cout << "Contact of this Customer is : " << this->phone_number << endl;
 	}
 
 };
@@ -176,19 +251,28 @@ public:
 };
 class Inventory {
 public:
-	list<Product> l1;
+	LinkedList l1;
 	int add_item(int id, string name, int quantity, string company_name, long float price) {
 
 		Product p;
 		p = Product(id, quantity, name, company_name, price);
-		l1.push_back(p);
+		l1.insertItem(p);
 	}
-	int del_item(string name) {
-		for (int i = 0; i < l1.size(); i++) {
-			Product temp;
-			l1.front();
-		}
+	int del_item(int id, string name) {
+		return l1.delete_Item(id, name);
+		
 	}
+
+	int update(int id, string name) {
+		return l1.update_item(id, name);
+		
+	}
+
+	void display_inventory() {
+		l1.display_total_items();
+	}
+
+	
 };
 
 
@@ -215,6 +299,33 @@ public:
 
 		}
 	}
+	void place_order() {
+		int id_of_Order;
+		cout << "Enter id of Order : " << endl;
+		cin >> id_of_Order;
+		cout << "Enter items of your order : " << endl;
+		while (true) {
+			cout << "Enter 1 if you have done with your items otherwise Enter 0 : ";
+			int choice;
+			cin >> choice;
+			if (choice == 0) {
+				return;
+			}
+			else {
+				string product_Name = "", company_name="";
+				Inventory stock_list;
+				cout << "Enter Product Name : ";
+				getline(cin, product_Name);
+				cout << "Enter Company Name : ";
+				getline(cin, company_name);
+				stock_list.
+
+			}
+		}
+
+
+
+	}
 };
 
 
@@ -222,7 +333,7 @@ public:
 class Functionality {
 public:
 	void Func() {
-		cout << "Enter 1 for Customer : ";
+		cout << "Enter 1 for add Customer : ";
 	}
 };
 
