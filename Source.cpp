@@ -4,6 +4,71 @@
 
 using namespace std; 
 
+
+
+class Identity {
+public:
+	long int id;
+	string name;
+
+	Identity() {
+		id = 0;
+		name = "";
+	}
+
+	Identity(int id, string name) {
+		this->id = id;
+		this->name = name;
+	}
+	void display() {
+		cout << "ID is : " << this->id << endl;
+		cout << "Name is : " << this->name << endl;
+	}
+
+
+};
+
+class Customer : public Identity {
+public:
+	string phone_number;
+	string address;
+	Customer() {
+		phone_number = "";
+		address = "";
+	}
+	Customer(int id, string name, string phone_number, string address):Identity(id, name) {
+		this->phone_number = phone_number;
+		this->address = address;
+	}
+	void display() {
+		cout << "ID of this Customer is : " << this->id << endl;
+		cout << "Name of this Customer is : " << this->name << endl;
+		cout << "Address of this Customer is : " << this->address << endl;
+		cout << "Contact of this Customer is : " << this->phone_number << endl;
+	}
+
+};
+
+class Product : public Identity {
+public:
+	string company_name; 
+	int quantity;
+	long float price;
+	Product() {
+		company_name = "";
+		quantity = 0;
+		price = 0.0;
+	}
+	Product(int id, string name, string company_name):Identity(id, name) {
+		this->company_name;
+	}
+	Product(int id, int quantity,  string name, string company_name, long float price):Identity(id, name) {
+		this->company_name = company_name;
+		this->quantity = quantity;
+		this->price = price;
+	}
+};
+
 class node {
 public:
 	Product data;
@@ -25,8 +90,8 @@ public:
 		newNode->data = data;
 		return newNode;
 	}
-	int insertItem(Product data) {
-		node* newNode = create_New_Node(data);
+	int insertItem(Product new_data) {
+		node* newNode = create_New_Node(new_data);
 		if (head == NULL) {
 			head = newNode;
 		}
@@ -161,7 +226,7 @@ public:
 	Product select_Product(string name, string company_name) {
 		if (head == NULL) {
 			cout << "Stock List is empty. Nothing to select from it." << endl;
-			return;
+			return Product(0, 0,"", "", 0.0);
 		}
 		else {
 			node* temp = head;
@@ -180,7 +245,7 @@ public:
 			}
 			if (found_item == false) {
 				cout << "Your product is not in Inventory List." << endl;
-				return;
+				return Product(0, 0, "", "", 0.0);;
 			}
 		}
 	}
@@ -189,66 +254,6 @@ public:
 
 };
 
-class Identity {
-public:
-	long int id;
-	string name;
-
-	Identity() {
-		id = 0;
-		name = "";
-	}
-
-	Identity(int id, string name) {
-		this->id = id;
-		this->name = name;
-	}
-	void display() {
-		cout << "ID is : " << this->id << endl;
-		cout << "Name is : " << this->name << endl;
-	}
-};
-
-class Customer : public Identity {
-public:
-	string phone_number;
-	string address;
-	Customer() {
-		phone_number = "";
-		address = "";
-	}
-	Customer(int id, string name, string phone_number, string address):Identity(id, name) {
-		this->phone_number = phone_number;
-		this->address = address;
-	}
-	void display() {
-		cout << "ID of this Customer is : " << this->id << endl;
-		cout << "Name of this Customer is : " << this->name << endl;
-		cout << "Address of this Customer is : " << this->address << endl;
-		cout << "Contact of this Customer is : " << this->phone_number << endl;
-	}
-
-};
-
-class Product : public Identity {
-public:
-	string company_name; 
-	int quantity;
-	long float price;
-	Product() {
-		company_name = "";
-		quantity = 0;
-		price = 0.0;
-	}
-	Product(int id, string name, string company_name):Identity(id, name) {
-		this->company_name;
-	}
-	Product(int id, int quantity,  string name, string company_name, long float price):Identity(id, name) {
-		this->company_name = company_name;
-		this->quantity = quantity;
-		this->price = price;
-	}
-};
 class Inventory {
 public:
 	LinkedList l1;
@@ -272,8 +277,12 @@ public:
 		l1.display_total_items();
 	}
 
+	Product select_product_to_buy(string name, string company_name, int quantity) {
+		//Product &p = l1.select_Product(name, company_name);
+	}
+
 	
-};
+}stock_List;
 
 
 class Order: protected Product {
@@ -313,13 +322,19 @@ public:
 			}
 			else {
 				string product_Name = "", company_name="";
-				Inventory stock_list;
+				int quantity_of_Product = 0;
+				Product product;
+				LinkedList list;
 				cout << "Enter Product Name : ";
 				getline(cin, product_Name);
 				cout << "Enter Company Name : ";
 				getline(cin, company_name);
-				stock_list.
-
+				cin.ignore();
+				cout << "Enter quantity of this product you want : " << endl;
+				cin >> quantity;
+				product = stock_List.select_product_to_buy(product_Name, company_name, quantity);
+				list.insertItem(product);
+				//stock_List.
 			}
 		}
 
