@@ -1,6 +1,9 @@
 #include<iostream>
 #include<string>
 #include<cstring>
+#include<list>
+#include<time.h>
+#include<cstdlib>
 
 using namespace std; 
 
@@ -104,6 +107,7 @@ public:
 		}
 		return 1;
 	}
+
 	int delete_Item(int id, string name) {
 		if (head == NULL) {
 			cout << "Link list is empty there is nothing to delete in it.";
@@ -209,10 +213,11 @@ public:
 			while (temp->next != NULL) {
 				cout << "ID : " << temp->data.id << endl;
 				cout << "Product Name : " << temp->data.name << endl;
-				cout << "Price of Product" << temp->data.price << endl;
+				cout << "Price of Product : " << temp->data.price << endl;
 				cout << "Company Name : " << temp->data.company_name << endl;
 				cout << "Quantity of Product : " << temp->data.quantity << endl;
 				cout << "-----------------------------------------------" << endl;
+				temp = temp->next;
 			}
 			cout << "ID : " << temp->data.id << endl;
 			cout << "Product Name : " << temp->data.name << endl;
@@ -223,7 +228,7 @@ public:
 		}
 	}
 
-	Product select_Product(string name, string company_name) {
+	Product select_Product(string name, string company_name, int quantity) {
 		if (head == NULL) {
 			cout << "Stock List is empty. Nothing to select from it." << endl;
 			return Product(0, 0,"", "", 0.0);
@@ -240,14 +245,20 @@ public:
 					p.price = temp->data.price;
 					p.quantity = temp->data.quantity;
 					found_item = true;
+					temp->data.quantity -= quantity;
 					return p;
 				}
+				temp = temp->next;
 			}
 			if (found_item == false) {
 				cout << "Your product is not in Inventory List." << endl;
 				return Product(0, 0, "", "", 0.0);;
 			}
 		}
+	}
+
+	Product get_Item() {
+		
 	}
 
 
@@ -262,6 +273,7 @@ public:
 		Product p;
 		p = Product(id, quantity, name, company_name, price);
 		l1.insertItem(p);
+		return 1;
 	}
 	int del_item(int id, string name) {
 		return l1.delete_Item(id, name);
@@ -278,7 +290,7 @@ public:
 	}
 
 	Product select_product_to_buy(string name, string company_name, int quantity) {
-		//Product &p = l1.select_Product(name, company_name);
+		return l1.select_Product(name, company_name, quantity);
 	}
 
 	
@@ -295,6 +307,7 @@ public:
 		order_item = nullptr;
 		length_of_list_of_item = 0;
 	}
+
 	Order(int id, long double order_price, string* order_item, int length_of_list_of_item):Product(id, "", "") {
 		this->order_price = order_price;
 		this->length_of_list_of_item = length_of_list_of_item;
@@ -308,35 +321,63 @@ public:
 
 		}
 	}
+
+	void create_invoice(list<Product> orders_list) {
+		list<Product> l1 = orders_list;
+		double total_bill = 0.0;
+		if (orders_list.size() == 0) {
+			cout << "List is empty. We cannot generate any invoice." << endl;
+		}
+		else {
+			cout << endl;
+			cout << "---------------HAMZA MART---------------" << endl;
+			while (!(l1.empty())) {
+				Product p;
+				p = l1.front();
+				l1.pop_front();
+				total_bill += p.price;
+				cout << p.name << "     " << p.company_name << "     :     " << p.price << endl;
+			}
+			cout << endl << "Total Bill is :  " << total_bill << endl;
+
+		}
+	}
+
 	void place_order() {
+		srand(time(NULL));
 		int id_of_Order;
-		cout << "Enter id of Order : " << endl;
-		cin >> id_of_Order;
+		id_of_Order = rand();
 		cout << "Enter items of your order : " << endl;
+		//LinkedList listfor_items_in_placing_order;
+		//Product* array_for_storing_orderList;
+		list<Product> listfor_items_in_placing_order;
 		while (true) {
+			int size_of_orderList = 0;
 			cout << "Enter 1 if you have done with your items otherwise Enter 0 : ";
 			int choice;
 			cin >> choice;
-			if (choice == 0) {
-				return;
+			cin.ignore();
+			if (choice == 1) {
+				break;
 			}
 			else {
 				string product_Name = "", company_name="";
 				int quantity_of_Product = 0;
 				Product product;
-				LinkedList list;
 				cout << "Enter Product Name : ";
 				getline(cin, product_Name);
 				cout << "Enter Company Name : ";
 				getline(cin, company_name);
 				cin.ignore();
 				cout << "Enter quantity of this product you want : " << endl;
-				cin >> quantity;
-				product = stock_List.select_product_to_buy(product_Name, company_name, quantity);
-				list.insertItem(product);
-				//stock_List.
+				cin >> quantity_of_Product;
+				product = stock_List.select_product_to_buy(product_Name, company_name, quantity_of_Product);
+				//array_for_storing_orderList = new Product[++size_of_orderList];
+				listfor_items_in_placing_order.push_back(product);
+				
 			}
 		}
+		create_invoice(listfor_items_in_placing_order);
 
 
 
@@ -345,16 +386,63 @@ public:
 
 
 
-class Functionality {
+class Functionality_ofcode {
 public:
+	void add_stock_item_inList() {
+		srand(time(NULL));
+		int id = 0, quantity = 0;
+		string name = "";
+		string company_name = "";
+		long float price = 0.0;
+		id = rand();
+		cout << "Enter name of Product : ";
+		getline(cin, name);
+		cout << "Enter the company name for the product : ";
+		getline(cin, company_name);
+		cin.ignore();
+		cout << "Enter the quantity of the product : ";
+		cin >> quantity;
+		cout << "Enter the price of the product : ";
+		cin >> price;
+		stock_List.add_item(id, name, quantity, company_name, price);
+
+	}
+
+	void placing_the_order() {
+		Order order;
+		order.place_order();
+	}
+
 	void Func() {
-		cout << "Enter 1 for add Customer : ";
+		int choice = 0;
+		cout << "Enter 1 to add Item in Stock List : " << endl;
+		cout << "Enter 2 to place the order : " << endl;
+		cout << "Enter 3 if you want to see your full inventory list : " << endl;
+		cin >> choice;
+		cin.ignore();
+		if (choice == 1) {
+			add_stock_item_inList();
+		}
+		else if (choice == 2) {
+			placing_the_order();
+		}
+		else if (choice == 3) {
+			stock_List.display_inventory();
+		}
 	}
 };
 
 int main() {
-	Identity* id;
-	Customer c;
-	id = &c;
+	Functionality_ofcode work;
+	int exit_or_not;
+	do {
+		cout << "Enter 0 for exit, otherwise enter any number to continue : ";
+		cin >> exit_or_not;
+		cin.ignore();
+		if (exit_or_not == 0) {
+			exit(0);
+		}
+		work.Func();
+	} while (exit_or_not != 0);
 	return 1;
 }
